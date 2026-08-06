@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RC Film Co. — Vintage Photobooth</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Space+Mono:wght@400;700&display=swap');
+
+:root{
+  --paper: #F1E9D8;
+  --paper-dim: #E7DCC4;
+  --ink: #241E19;
+  --ink-soft: #4A4038;
+  --red: #7A2A2A;
+  --red-deep: #5A1E1E;
+  --brass: #B08D57;
+  --brass-light: #D6BD8C;
+  --fade: #857A69;
+  --shadow-dark: #14100C;
+  --cream-highlight: #FBF6EA;
+}
+
+*{box-sizing:border-box; margin:0; padding:0;}
+
+html{scroll-behavior:smooth;}
+
+body{
+  background: var(--paper);
+  color: var(--ink);
+  font-family:'Fraunces', Georgia, serif;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:999;
+  opacity:0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+}
+
+.mono{
+  font-family:'Space Mono', monospace;
+  letter-spacing:0.08em;
+}
+
+/* ---------- perforation divider ---------- */
+.perf-row{
+  display:flex;
+  justify-content:space-evenly;
+  align-items:center;
+  padding:10px 0;
+  background: var(--ink);
+}
+.perf-row span{
+  width:9px; height:9px;
+  border-radius:50%;
+  background: var(--paper);
+  opacity:0.85;
+  flex-shrink:0;
+}
+
+/* ---------- header ---------- */
+header{
+  padding:28px 6vw 22px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid rgba(36,30,25,0.15);
+}
+.wordmark{
+  font-size:1.5rem;
+  font-weight:700;
+  letter-spacing:0.02em;
+}
+.wordmark .accent{
+  color:var(--red);
+  font-style:italic;
+  font-weight:500;
+}
+nav a{
+  color:var(--ink-soft);
+  text-decoration:none;
+  font-family:'Space Mono', monospace;
+  font-size:0.72rem;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  margin-left:28px;
+  border-bottom:1px solid transparent;
+  transition: border-color 0.25s ease, color 0.25s ease;
+}
+nav a:hover{ color:var(--red); border-color:var(--red); }
+
+/* ---------- hero ---------- */
+.hero{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  padding:10vh 6vw 10vh;
+  max-width:900px;
+  margin:0 auto;
+}
+.hero-eyebrow{
+  font-family:'Space Mono', monospace;
+  font-size:0.72rem;
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  color:var(--red);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:22px;
+}
+.hero-eyebrow::before{
+  content:'';
+  width:26px; height:1px;
+  background:var(--red);
+}
+.hero h1{
+  font-size:clamp(2.6rem, 5.4vw, 4.6rem);
+  line-height:0.98;
+  font-weight:600;
+  letter-spacing:-0.01em;
+}
+.hero h1 em{
+  font-style:italic;
+  font-weight:500;
+  color:var(--red);
+}
+.hero p{
+  margin-top:26px;
+  max-width:46ch;
+  color:var(--ink-soft);
+  font-size:1.05rem;
+  line-height:1.65;
+}
+.hero-ctas{
+  margin-top:38px;
+  display:flex;
+  align-items:center;
+  gap:26px;
+  flex-wrap:wrap;
+}
+.btn-shutter{
+  background:var(--ink);
+  color:var(--paper);
+  border:none;
+  padding:16px 30px;
+  font-family:'Space Mono', monospace;
+  font-size:0.78rem;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  cursor:pointer;
+  position:relative;
+  transition:transform 0.2s ease, background 0.3s ease;
+}
+.btn-shutter:hover{ background:var(--red-deep); transform:translateY(-2px); }
+.btn-shutter:active{ transform:translateY(0px) scale(0.98); }
+
+.link-ghost{
+  font-family:'Space Mono', monospace;
+  font-size:0.78rem;
+  letter-spacing:0.1em;
+  color:var(--ink-soft);
+  text-decoration:none;
+  border-bottom:1px solid var(--brass);
+  padding-bottom:2px;
+}
+.link-ghost:hover{ color:var(--red); border-color:var(--red); }
+
+/* ---------- booth section ---------- */
+.booth-section{
+  padding:10vh 6vw 12vh;
+  background: var(--ink);
+  color: var(--paper);
+  position:relative;
+}
+.booth-section::after{
+  content:'';
+  position:absolute; inset:0;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.55) 100%);
+  pointer-events:none;
+}
+.section-head{
+  text-align:center;
+  max-width:640px;
+  margin:0 auto 60px;
+  position:relative;
+  z-index:1;
+}
+.section-head .hero-eyebrow{ justify-content:center; color:var(--brass-light); }
+.section-head .hero-eyebrow::before{ background:var(--brass-light); }
+.section-head h2{
+  font-size:clamp(2rem, 4vw, 3rem);
+  font-weight:600;
+}
+.section-head h2 em{ font-style:italic; font-weight:500; color:var(--brass-light); }
+.section-head p{
+  margin-top:16px;
+  color:#C9C0B2;
+  font-size:1rem;
+  line-height:1.6;
+}
+
+.camera-body{
+  max-width:760px;
+  margin:0 auto;
+  background: linear-gradient(180deg, #2E2620, #1C1712);
+  border:1px solid rgba(176,141,87,0.35);
+  border-radius:10px;
+  padding:34px;
+  position:relative;
+  z-index:1;
+  box-shadow: 0 40px 90px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(255,255,255,0.02);
+}
+.camera-body::before, .camera-body::after{
+  content:'';
+  position:absolute;
+  width:14px; height:14px;
+  border-radius:50%;
+  background: radial-gradient(circle at 35% 35%, var(--brass-light), var(--brass) 60%, #6e5730 100%);
+  box-shadow: inset 0 0 2px rgba(0,0,0,0.5);
+  top:16px;
+}
+.camera-body::before{ left:16px; }
+.camera-body::after{ right:16px; }
+
+.viewfinder{
+  position:relative;
+  width:100%;
+  aspect-ratio: 4/3;
+  background:#0B0906;
+  border-radius:4px;
+  overflow:hidden;
+  border: 6px solid #100C09;
+  box-shadow: inset 0 0 40px rgba(0,0,0,0.8), inset 0 0 0 1px rgba(176,141,87,0.25);
+  transition: aspect-ratio 0.35s ease;
+}
+.viewfinder.portrait{
+  aspect-ratio: 3/4;
+  max-width:420px;
+  margin:0 auto;
+}
+.viewfinder video, .viewfinder canvas{
+  width:100%; height:100%;
+  object-fit:cover;
+  display:block;
+}
+#liveVideo{
+  transform:scaleX(-1);
+}
+.viewfinder.landscape{
+  aspect-ratio: 4/3;
+}
+.viewfinder.noir #liveVideo{
+  filter: grayscale(1) contrast(1.4) brightness(0.95) sepia(0.15);
+}
+.viewfinder.kodak #liveVideo{
+  filter: saturate(1.4) contrast(1.15) sepia(0.25) brightness(1.02) hue-rotate(-5deg);
+}
+.viewfinder.fuji #liveVideo{
+  filter: saturate(0.7) contrast(0.85) brightness(1.08) sepia(0.1);
+}
+.viewfinder.polaroid #liveVideo{
+  filter: saturate(1.1) contrast(0.95) brightness(1.05) sepia(0.35) hue-rotate(-8deg);
+}
+.viewfinder.slide #liveVideo{
+  filter: saturate(1.2) contrast(1.25) brightness(0.98) hue-rotate(8deg) sepia(0.05);
+}
+
+.vf-idle{
+  position:absolute; inset:0;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:14px;
+  color:#8A7F6E;
+  text-align:center;
+  padding:20px;
+}
+.vf-idle .mono{ font-size:0.72rem; letter-spacing:0.16em; }
+.vf-corner-marks span{
+  position:absolute;
+  width:18px; height:18px;
+  border:1.5px solid rgba(176,141,87,0.55);
+}
+.vf-corner-marks span:nth-child(1){ top:10px; left:10px; border-right:none; border-bottom:none; }
+.vf-corner-marks span:nth-child(2){ top:10px; right:10px; border-left:none; border-bottom:none; }
+.vf-corner-marks span:nth-child(3){ bottom:10px; left:10px; border-right:none; border-top:none; }
+.vf-corner-marks span:nth-child(4){ bottom:10px; right:10px; border-left:none; border-top:none; }
+
+.rec-dot{
+  position:absolute;
+  top:14px; left:14px;
+  display:flex; align-items:center; gap:8px;
+  font-family:'Space Mono', monospace;
+  font-size:0.65rem; letter-spacing:0.1em;
+  color:#E8D9BC;
+  z-index:2;
+}
+.rec-dot i{
+  width:8px; height:8px; border-radius:50%;
+  background:var(--red);
+  box-shadow:0 0 8px var(--red);
+  animation: blink 1.6s infinite;
+}
+@keyframes blink{ 0%,100%{opacity:1;} 50%{opacity:0.25;} }
+
+.frame-counter{
+  position:absolute;
+  top:14px; right:14px;
+  font-family:'Space Mono', monospace;
+  font-size:0.68rem; letter-spacing:0.08em;
+  color:#E8D9BC;
+  z-index:2;
+}
+
+.countdown-overlay{
+  position:absolute; inset:0;
+  display:none;
+  align-items:center; justify-content:center;
+  background:rgba(11,9,6,0.35);
+  font-family:'Fraunces', serif;
+  font-size:5rem;
+  color:var(--cream-highlight);
+  font-weight:600;
+  z-index:3;
+}
+.flash-overlay{
+  position:absolute; inset:0;
+  background:#fff;
+  opacity:0;
+  pointer-events:none;
+  z-index:4;
+}
+
+/* controls row */
+.controls-row{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:24px;
+  margin-top:26px;
+  flex-wrap:wrap;
+}
+.dial-group{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.dial-label{
+  font-family:'Space Mono', monospace;
+  font-size:0.62rem;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:#7A6F5D;
+  padding-left:4px;
+}
+
+.dial{
+  display:flex;
+  background:#100C09;
+  border:1px solid rgba(176,141,87,0.35);
+  border-radius:30px;
+  padding:4px;
+  gap:4px;
+}
+.dial button{
+  border:none;
+  background:transparent;
+  color:#9A8E7A;
+  font-family:'Space Mono', monospace;
+  font-size:0.7rem;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  padding:10px 18px;
+  border-radius:24px;
+  cursor:pointer;
+  transition:all 0.25s ease;
+}
+.dial button.active{
+  background: var(--brass-light);
+  color:#1C1712;
+  font-weight:700;
+}
+
+.shutter-btn{
+  width:66px; height:66px;
+  border-radius:50%;
+  border:3px solid var(--brass-light);
+  background: radial-gradient(circle at 35% 30%, #9E2E2E, var(--red-deep) 70%);
+  cursor:pointer;
+  position:relative;
+  flex-shrink:0;
+  transition:transform 0.15s ease;
+  box-shadow:0 0 0 4px rgba(176,141,87,0.15), 0 10px 24px rgba(0,0,0,0.5);
+}
+.shutter-btn:hover{ transform:scale(1.05); }
+.shutter-btn:active{ transform:scale(0.94); }
+.shutter-btn:disabled{ opacity:0.5; cursor:not-allowed; transform:none; }
+
+.controls-right{
+  display:flex; align-items:center; gap:16px;
+}
+.icon-btn{
+  background:none;
+  border:1px solid rgba(176,141,87,0.35);
+  color:#C9C0B2;
+  font-family:'Space Mono', monospace;
+  font-size:0.66rem;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  padding:9px 14px;
+  border-radius:20px;
+  cursor:pointer;
+  transition:all 0.25s ease;
+}
+.icon-btn:hover{ border-color:var(--brass-light); color:var(--brass-light); }
+
+.status-line{
+  margin-top:16px;
+  font-family:'Space Mono', monospace;
+  font-size:0.68rem;
+  letter-spacing:0.06em;
+  color:#8A7F6E;
+  min-height:16px;
+  text-align:center;
+}
+
+input[type=file]{ display:none; }
+
+/* film stock selector */
+.film-stock-row{
+  margin-top:22px;
+  display:flex;
+  gap:10px;
+  overflow-x:auto;
+  padding:4px 2px 10px;
+  scrollbar-width:thin;
+}
+.film-stock-row::-webkit-scrollbar{ height:5px; }
+.film-stock-row::-webkit-scrollbar-thumb{ background:rgba(176,141,87,0.4); border-radius:4px; }
+.stock-btn{
+  flex:0 0 auto;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:8px;
+  width:132px;
+  padding:10px;
+  background:#160F0A;
+  border:1px solid rgba(176,141,87,0.25);
+  border-radius:8px;
+  cursor:pointer;
+  transition:all 0.25s ease;
+  text-align:left;
+}
+.stock-btn:hover{ border-color:rgba(176,141,87,0.6); transform:translateY(-2px); }
+.stock-btn.active{
+  border-color:var(--brass-light);
+  background:#1F160E;
+  box-shadow:0 0 0 1px var(--brass-light) inset;
+}
+.stock-swatch{
+  display:block;
+  width:100%;
+  height:34px;
+  border-radius:4px;
+  background: linear-gradient(135deg, var(--sw1), var(--sw2));
+}
+.stock-name{
+  font-family:'Fraunces', serif;
+  font-weight:600;
+  font-size:0.82rem;
+  color:var(--paper);
+}
+.stock-desc{
+  font-size:0.6rem;
+  color:#8A7F6E;
+  letter-spacing:0.06em;
+}
+.stock-btn.active .stock-desc{ color:var(--brass-light); }
+
+/* ---------- result strip ---------- */
+.result-wrap{
+  max-width:760px;
+  margin:56px auto 0;
+  display:none;
+  position:relative;
+  z-index:1;
+  flex-direction:column;
+  align-items:center;
+  gap:22px;
+}
+.result-wrap.show{ display:flex; }
+.result-wrap canvas{
+  max-width:280px;
+  width:100%;
+  box-shadow:0 30px 60px rgba(0,0,0,0.5);
+  transform:rotate(-1.5deg);
+  border-radius:2px;
+}
+.result-actions{
+  display:flex;
+  gap:16px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+
+/* ---------- footer ---------- */
+footer{
+  padding:60px 6vw 40px;
+  text-align:center;
+  color:var(--fade);
+}
+footer .wordmark{
+  font-size:1.1rem;
+  justify-content:center;
+  display:flex;
+  margin-bottom:10px;
+}
+footer p{
+  font-family:'Space Mono', monospace;
+  font-size:0.65rem;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+}
+
+@media (max-width: 860px){
+  .hero{ padding-top:6vh; text-align:left; }
+  .camera-body{ padding:20px; }
+  .controls-row{ justify-content:center; }
+  .dial-group{ align-items:center; }
+  .controls-right{ order:3; width:100%; justify-content:center; margin-top:10px; }
+  .film-stock-row{ justify-content:flex-start; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  * { animation:none !important; transition:none !important; }
+}
+
+:focus-visible{
+  outline:2px solid var(--brass-light);
+  outline-offset:3px;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wordmark">RC <span class="accent">Film</span> Co.</div>
+  <nav>
+    <a href="#booth">The Booth</a>
+    <a href="#about">About</a>
+  </nav>
+</header>
+
+<div class="perf-row" aria-hidden="true">
+  <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+</div>
+
+<section class="hero" id="about">
+  <div>
+    <div class=/div>
+    <h1>Every strip<br>tells a <em>little</em> story.</h1>
+    <p>RC Film Co. brings the corner-arcade photobooth online — four frames, one roll of light, and a little imperfection worth keeping. Step in, strike your pose, and walk out with a strip that looks like it's been in a wallet for years.</p>
+    <div class="hero-ctas">
+      <a href="#booth" class="btn-shutter">Step Into the Booth</a>
+      <a href="#" class="link-ghost" id="scrollAbout">How it works</a>
+    </div>
+  </div>
+</section>
+
+<section class="booth-section" id="booth">
+  <div class="section-head">
+    <div class="hero-eyebrow mono">Roll loaded — ready when you are</div>
+    <h2>The <em>Booth</em></h2>
+    <p>Pick your orientation and film stock, settle into frame, and press the shutter. Three exposures, one strip, printed instantly below.</p>
+  </div>
+
+  <div class="camera-body">
+    <div class="viewfinder noir landscape" id="viewfinder">
+      <video id="liveVideo" autoplay playsinline muted></video>
+      <div class="vf-idle" id="vfIdle">
+        <div class="mono">◎ NO SIGNAL</div>
+        <div class="mono" style="max-width:32ch; line-height:1.6;">Allow camera access to open the shutter, or upload three photos of your own.</div>
+      </div>
+      <div class="vf-corner-marks" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+      <div class="rec-dot"><i></i>LIVE</div>
+      <div class="frame-counter mono" id="frameCounter">FRAME 0/3</div>
+      <div class="countdown-overlay" id="countdownOverlay">3</div>
+      <div class="flash-overlay" id="flashOverlay"></div>
+    </div>
+
+    <div class="controls-row">
+      <div class="dial-group">
+        <div class="dial-label">Orientation</div>
+        <div class="dial" role="group" aria-label="Orientation">
+          <button type="button" class="active" data-orientation="landscape" id="orientLandscape">Landscape</button>
+          <button type="button" data-orientation="portrait" id="orientPortrait">Portrait</button>
+        </div>
+      </div>
+
+      <button type="button" class="shutter-btn" id="shutterBtn" aria-label="Take photo strip" title="Take photo strip"></button>
+
+      <div class="controls-right">
+        <button type="button" class="icon-btn" id="startCameraBtn">Open Shutter</button>
+        <label class="icon-btn" for="uploadInput" style="cursor:pointer;">Upload Instead</label>
+        <input type="file" id="uploadInput" accept="image/*" multiple>
+      </div>
+    </div>
+
+    <div class="dial-label" style="margin-top:22px;">Film Stock</div>
+    <div class="film-stock-row" id="filmStockRow" role="group" aria-label="Film stock">
+      <button type="button" class="stock-btn active" data-style="noir" style="--sw1:#2a2a2a;--sw2:#d9d3c4;">
+        <span class="stock-swatch"></span>
+        <span class="stock-name">Ilford Noir</span>
+        <span class="stock-desc mono">Classic B&amp;W</span>
+      </button>
+      <button type="button" class="stock-btn" data-style="kodak" style="--sw1:#8a4a2a;--sw2:#e8b25c;">
+        <span class="stock-swatch"></span>
+        <span class="stock-name">Kodak Gold</span>
+        <span class="stock-desc mono">Warm &amp; vivid</span>
+      </button>
+      <button type="button" class="stock-btn" data-style="fuji" style="--sw1:#a89c86;--sw2:#e6ddc8;">
+        <span class="stock-swatch"></span>
+        <span class="stock-name">Fuji Faded</span>
+        <span class="stock-desc mono">Soft &amp; pastel</span>
+      </button>
+      <button type="button" class="stock-btn" data-style="polaroid" style="--sw1:#7a5a3a;--sw2:#f0c98a;">
+        <span class="stock-swatch"></span>
+        <span class="stock-name">Polaroid Warm</span>
+        <span class="stock-desc mono">Sun-bleached</span>
+      </button>
+      <button type="button" class="stock-btn" data-style="slide" style="--sw1:#2f4a5a;--sw2:#8fb2c2;">
+        <span class="stock-swatch"></span>
+        <span class="stock-name">Cool Slide</span>
+        <span class="stock-desc mono">Crisp &amp; blue</span>
+      </button>
+    </div>
+
+    <div class="status-line mono" id="statusLine">Camera is closed. Click "Open Shutter" to begin, or upload three photos.</div>
+  </div>
+
+  <div class="result-wrap" id="resultWrap">
+    <canvas id="stripCanvas"></canvas>
+    <div class="result-actions">
+      <button type="button" class="icon-btn" id="downloadBtn" style="border-color:var(--brass-light); color:var(--brass-light);">Download Strip</button>
+      <button type="button" class="icon-btn" id="retakeBtn">Take Another</button>
+    </div>
+  </div>
+</section>
+
+<div class="perf-row" aria-hidden="true">
+  <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+</div>
+
+<footer>
+  <div class="wordmark">RC <span class="accent" style="color:var(--red);">Film</span> Co.</div>
+  <p>No film wasted · Since always</p>
+</footer>
+
+<script>
+(function(){
+  const viewfinder = document.getElementById('viewfinder');
+  const liveVideo = document.getElementById('liveVideo');
+  const vfIdle = document.getElementById('vfIdle');
+  const statusLine = document.getElementById('statusLine');
+  const shutterBtn = document.getElementById('shutterBtn');
+  const startCameraBtn = document.getElementById('startCameraBtn');
+  const uploadInput = document.getElementById('uploadInput');
+  const frameCounter = document.getElementById('frameCounter');
+  const countdownOverlay = document.getElementById('countdownOverlay');
+  const flashOverlay = document.getElementById('flashOverlay');
+  const orientLandscape = document.getElementById('orientLandscape');
+  const orientPortrait = document.getElementById('orientPortrait');
+  const filmStockRow = document.getElementById('filmStockRow');
+  const resultWrap = document.getElementById('resultWrap');
+  const stripCanvas = document.getElementById('stripCanvas');
+  const downloadBtn = document.getElementById('downloadBtn');
+  const retakeBtn = document.getElementById('retakeBtn');
+
+  const STYLES = {
+    noir:     { label:'Ilford Noir',    filter:'grayscale(1) contrast(1.4) brightness(0.95) sepia(0.15)',                 wash:'rgba(122,96,58,0.08)' },
+    kodak:    { label:'Kodak Gold',     filter:'saturate(1.4) contrast(1.15) sepia(0.25) brightness(1.02) hue-rotate(-5deg)', wash:'rgba(196,120,40,0.12)' },
+    fuji:     { label:'Fuji Faded',     filter:'saturate(0.7) contrast(0.85) brightness(1.08) sepia(0.1)',                wash:'rgba(180,170,140,0.14)' },
+    polaroid: { label:'Polaroid Warm',  filter:'saturate(1.1) contrast(0.95) brightness(1.05) sepia(0.35) hue-rotate(-8deg)', wash:'rgba(210,150,70,0.16)' },
+    slide:    { label:'Cool Slide',     filter:'saturate(1.2) contrast(1.25) brightness(0.98) hue-rotate(8deg) sepia(0.05)',  wash:'rgba(50,90,120,0.1)' }
+  };
+  const ORIENTATIONS = {
+    landscape: { w:480, h:360 },
+    portrait:  { w:360, h:480 }
+  };
+
+  let stockKey = 'noir';
+  let orientation = 'landscape';
+  let stream = null;
+  let capturedFrames = [];
+  const SHOTS = 3;
+  let busy = false;
+
+  function setStock(key){
+    stockKey = key;
+    Array.from(filmStockRow.children).forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.style === key);
+    });
+    Object.keys(STYLES).forEach(k => viewfinder.classList.remove(k));
+    viewfinder.classList.add(key);
+  }
+  filmStockRow.addEventListener('click', (e) => {
+    const btn = e.target.closest('.stock-btn');
+    if(!btn) return;
+    setStock(btn.dataset.style);
+  });
+
+  function setOrientation(o){
+    orientation = o;
+    orientLandscape.classList.toggle('active', o === 'landscape');
+    orientPortrait.classList.toggle('active', o === 'portrait');
+    viewfinder.classList.toggle('portrait', o === 'portrait');
+    viewfinder.classList.toggle('landscape', o === 'landscape');
+  }
+  orientLandscape.addEventListener('click', () => setOrientation('landscape'));
+  orientPortrait.addEventListener('click', () => setOrientation('portrait'));
+
+  async function openCamera(){
+    if(stream){ return; }
+    try{
+      statusLine.textContent = 'Requesting camera access…';
+      stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio:false });
+      liveVideo.srcObject = stream;
+      vfIdle.style.display = 'none';
+      startCameraBtn.textContent = 'Close Shutter';
+      statusLine.textContent = 'Camera open. Pick your film stock, then press the shutter.';
+    }catch(err){
+      statusLine.textContent = 'Camera unavailable — upload three photos instead.';
+    }
+  }
+  function closeCamera(){
+    if(stream){
+      stream.getTracks().forEach(t => t.stop());
+      stream = null;
+    }
+    liveVideo.srcObject = null;
+    vfIdle.style.display = 'flex';
+    startCameraBtn.textContent = 'Open Shutter';
+    statusLine.textContent = 'Camera is closed.';
+  }
+  startCameraBtn.addEventListener('click', () => {
+    if(stream){ closeCamera(); } else { openCamera(); }
+  });
+
+  function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
+
+  function filterFor(key){
+    return STYLES[key].filter;
+  }
+
+  function drawVideoCover(ctx, video, dw, dh){
+    const vw = video.videoWidth || dw, vh = video.videoHeight || dh;
+    const vAspect = vw / vh, dAspect = dw / dh;
+    let sx, sy, sw, sh;
+    if(vAspect > dAspect){
+      sh = vh; sw = vh * dAspect; sx = (vw - sw) / 2; sy = 0;
+    }else{
+      sw = vw; sh = vw / dAspect; sx = 0; sy = (vh - sh) / 2;
+    }
+    ctx.drawImage(video, sx, sy, sw, sh, 0, 0, dw, dh);
+  }
+
+  function grabFrameFromVideo(){
+    const dims = ORIENTATIONS[orientation];
+    const c = document.createElement('canvas');
+    c.width = dims.w; c.height = dims.h;
+    const ctx = c.getContext('2d');
+    ctx.filter = filterFor(stockKey);
+    ctx.save();
+    ctx.translate(dims.w, 0);
+    ctx.scale(-1, 1);
+    drawVideoCover(ctx, liveVideo, dims.w, dims.h);
+    ctx.restore();
+    return c;
+  }
+
+  function grabFrameFromImage(img){
+    const dims = ORIENTATIONS[orientation];
+    const c = document.createElement('canvas');
+    c.width = dims.w; c.height = dims.h;
+    const ctx = c.getContext('2d');
+    ctx.filter = filterFor(stockKey);
+    const scale = Math.max(dims.w / img.width, dims.h / img.height);
+    const dw = img.width * scale, dh = img.height * scale;
+    ctx.drawImage(img, (dims.w - dw) / 2, (dims.h - dh) / 2, dw, dh);
+    return c;
+  }
+
+  async function runCountdown(){
+    countdownOverlay.style.display = 'flex';
+    for(const n of [3,2,1]){
+      countdownOverlay.textContent = n;
+      await sleep(600);
+    }
+    countdownOverlay.style.display = 'none';
+    flashOverlay.style.transition = 'opacity 0.08s ease';
+    flashOverlay.style.opacity = '0.9';
+    await sleep(90);
+    flashOverlay.style.opacity = '0';
+  }
+
+  async function captureSequence(){
+    if(busy) return;
+    if(!stream){
+      statusLine.textContent = 'Open the shutter (camera) first, or upload photos instead.';
+      return;
+    }
+    busy = true;
+    shutterBtn.disabled = true;
+    capturedFrames = [];
+    for(let i=0; i<SHOTS; i++){
+      frameCounter.textContent = 'FRAME ' + i + '/' + SHOTS;
+      statusLine.textContent = 'Get ready — exposure ' + (i+1) + ' of ' + SHOTS + '…';
+      await runCountdown();
+      const frame = grabFrameFromVideo();
+      capturedFrames.push(frame);
+      frameCounter.textContent = 'FRAME ' + (i+1) + '/' + SHOTS;
+      statusLine.textContent = 'Exposure ' + (i+1) + ' captured.';
+      await sleep(400);
+    }
+    statusLine.textContent = 'Developing your strip…';
+    await sleep(500);
+    composeStrip(capturedFrames);
+    busy = false;
+    shutterBtn.disabled = false;
+    statusLine.textContent = 'Strip developed. Download it below.';
+  }
+  shutterBtn.addEventListener('click', captureSequence);
+
+  uploadInput.addEventListener('change', async (e) => {
+    const files = Array.from(e.target.files || []).slice(0, SHOTS);
+    if(files.length === 0) return;
+    statusLine.textContent = 'Developing your strip…';
+    const imgs = await Promise.all(files.map(f => new Promise((res) => {
+      const img = new Image();
+      img.onload = () => res(img);
+      img.src = URL.createObjectURL(f);
+    })));
+    const frames = imgs.map(grabFrameFromImage);
+    while(frames.length < SHOTS && frames.length > 0){
+      frames.push(frames[frames.length % imgs.length]);
+    }
+    composeStrip(frames);
+    statusLine.textContent = 'Strip developed. Download it below.';
+  });
+
+  function addGrain(ctx, w, h){
+    const imgData = ctx.getImageData(0,0,w,h);
+    const d = imgData.data;
+    for(let i=0; i<d.length; i+=4){
+      const n = (Math.random() - 0.5) * 32;
+      d[i] += n; d[i+1] += n; d[i+2] += n;
+    }
+    ctx.putImageData(imgData, 0, 0);
+  }
+
+  function composeStrip(frames){
+    const padding = 26;
+    const gap = 18;
+    const capturedAspect = frames[0].height / frames[0].width;
+    const frameW = orientation === 'portrait' ? 340 : 420;
+    const frameH = Math.round(frameW * capturedAspect);
+    const footerH = 70;
+    const w = frameW + padding*2;
+    const h = padding + (frameH + gap) * frames.length + footerH;
+
+    stripCanvas.width = w;
+    stripCanvas.height = h;
+    const ctx = stripCanvas.getContext('2d');
+
+    ctx.fillStyle = '#FBF6EA';
+    ctx.fillRect(0,0,w,h);
+
+    frames.forEach((f, i) => {
+      const y = padding + i * (frameH + gap);
+      ctx.drawImage(f, padding, y, frameW, frameH);
+      ctx.strokeStyle = 'rgba(36,30,25,0.15)';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(padding, y, frameW, frameH);
+    });
+
+    // vignette per frame
+    frames.forEach((f, i) => {
+      const y = padding + i * (frameH + gap);
+      const grad = ctx.createRadialGradient(
+        padding + frameW/2, y + frameH/2, frameH*0.25,
+        padding + frameW/2, y + frameH/2, frameH*0.75
+      );
+      grad.addColorStop(0, 'rgba(0,0,0,0)');
+      grad.addColorStop(1, 'rgba(10,7,4,0.5)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(padding, y, frameW, frameH);
+    });
+
+    // stock-specific tonal wash to mimic an aged chemical print
+    frames.forEach((f, i) => {
+      const y = padding + i * (frameH + gap);
+      ctx.fillStyle = STYLES[stockKey].wash;
+      ctx.fillRect(padding, y, frameW, frameH);
+    });
+
+    addGrain(ctx, w, h);
+
+    // footer text
+    ctx.fillStyle = '#241E19';
+    ctx.textAlign = 'center';
+    ctx.font = '600 20px Fraunces, Georgia, serif';
+    ctx.fillText('RC Film Co.', w/2, h - footerH + 30);
+    ctx.font = '11px "Space Mono", monospace';
+    ctx.fillStyle = '#857A69';
+    const dateStr = new Date().toLocaleDateString(undefined, { year:'numeric', month:'short', day:'numeric' });
+    ctx.fillText(dateStr + '  ·  ' + STYLES[stockKey].label.toUpperCase(), w/2, h - footerH + 50);
+
+    resultWrap.classList.add('show');
+    resultWrap.scrollIntoView({ behavior:'smooth', block:'center' });
+  }
+
+  downloadBtn.addEventListener('click', () => {
+    const link = document.createElement('a');
+    link.download = 'rc-film-co-strip.png';
+    link.href = stripCanvas.toDataURL('image/png');
+    link.click();
+  });
+
+  retakeBtn.addEventListener('click', () => {
+    resultWrap.classList.remove('show');
+    frameCounter.textContent = 'FRAME 0/' + SHOTS;
+    document.getElementById('booth').scrollIntoView({ behavior:'smooth' });
+  });
+
+  document.getElementById('scrollAbout').addEventListener('click', (e) => {
+    e.preventDefault();
+    document.getElementById('booth').scrollIntoView({ behavior:'smooth' });
+  });
+})();
+</script>
+</body>
+</html>
